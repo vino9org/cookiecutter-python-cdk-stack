@@ -1,0 +1,116 @@
+name: CDK Stack Pipeline
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'feature**'
+  delete:
+    branches:
+      - 'feature**'
+
+env:
+  AWS_DEFAULT_REGION: us-west-2
+
+jobs:
+  set-stack-name:
+    runs-on: ubuntu-latest
+    outputs:
+      stack-name: ${{ steps.set-stack-name.outputs.stack-name }}
+    steps:
+      - name: set stack name from git branch name
+        id: set-stack-name
+        run: |
+          env | grep GITHUB | sort
+
+          if [ "$GITHUB_EVENT_NAME" == "push" -a "$GITHUB_REF" == "refs/heads/develop" ]; then
+              STACK_NAME="develop"
+          elif [ "$GITHUB_EVENT_NAME" == "push" -a "${GITHUB_REF:0:18}" == "refs/heads/feature" ]; then
+              STACK_NAME=$(echo ${GITHUB_REF##*/} | tr -cd "[a-zA-Z0-9-]")
+          elif [ "$GITHUB_EVENT_NAME" == "delete" ]; then
+              STACK_NAME=$(echo ${FEATURE_BRANCH_REF##*/} | tr -cd "[a-zA-Z0-9-]")
+          fi
+
+          echo STACK_NAME="$STACK_NAME"
+          echo '::set-output name=stack-name::{{cookiecutter.stack_name}}-'${STACK_NAME:0:20}
+        env:
+          FEATURE_BRANCH_REF: ${{ github.event.ref }}
+
+  build-test-deploy:
+    if: github.event_name != 'delete'
+    needs: set-stack-name
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: unit tests
+        run: |
+          echo running unit tests on stack $TESTING_STACK_NAME
+          pip install -r runtime/requirements.txt --target=runtime/.
+          pip install -r requirements.txt
+          pytest tests/unit
+        env: 
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          TESTING_STACK_NAME: ${{ needs.set-stack-name.outputs.stack-name }}
+
+      - name: deploy feature stack
+        run: |
+          echo deploying stack $TESTING_STACK_NAME
+          npm install -g aws-cdk 
+          cdk deploy --require-approval never
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          TESTING_STACK_NAME: ${{ needs.set-stack-name.outputs.stack-name }}
+
+  integration-tests:
+    needs: [set-stack-name, build-test-deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: integration tests
+        run: |
+          echo running integration tests on stack $TESTING_STACK_NAME
+          pip install -r requirements.txt
+          pytest tests/integration
+        env: 
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          TESTING_STACK_NAME: ${{ needs.set-stack-name.outputs.stack-name }}
+
+  delete-feature-stack:
+    if: startsWith(github.event.ref, 'feature') && github.event_name == 'delete'
+    needs: set-stack-name
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: delete feature stack
+        run: |
+          echo deleting stack $TESTING_STACK_NAME
+          npm install -g aws-cdk 
+          pip install -r requirements.txt
+          cdk destroy --force
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          TESTING_STACK_NAME: ${{ needs.set-stack-name.outputs.stack-name }}
+

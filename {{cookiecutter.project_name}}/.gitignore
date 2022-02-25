@@ -1,0 +1,26 @@
+*.swp
+package-lock.json
+__pycache__
+.pytest_cache
+.venv
+*.egg-info
+.env*
+
+# test reports
+test-report/
+.coverage
+coverage.xml
+pytest_junit.xml
+
+# mypy
+.mypy_cache/
+
+# intellj
+.idea/
+
+# AWS SAM CLI
+.aws-sam/
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out

@@ -1,0 +1,65 @@
+[tool.poetry]
+name = "{{ cookiecutter.project_name }}"
+version = "0.1.0"
+description = "AWS infrastructure stack written in AWS CDK for Python"
+authors = ["Li Lin <guru.lin@gmail.com>"]
+license = "MIT"
+
+# this section contains all dependencies required to run unit and integration tests
+# not just dependencies requied for lambda runtime
+[tool.poetry.dependencies]
+python = "^3.9"
+boto3 = "1.21.4"
+aws-lambda-powertools = "^1.24.2"
+aws-cdk-lib = "^2.13.0"
+constructs = "10.*"
+pytest = "^6.2.5"
+pytest-mock = "^3.5.1"
+pytest-cov = "^3.0.0"
+{% if cookiecutter.use_pytest == 'y' -%}
+"aws-solutions-constructs.aws-apigateway-lambda" = "^2.3.0"
+{%- endif %}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dev-dependencies]
+# formatting, linting
+black = "^22.1.0"
+flake8 = "^4.0.1"
+flake8-black = "^0.2.3"
+flake8-builtins = "^1.5.3"
+flake8-comprehensions = "^3.7.0"
+flake8-debugger = "^4.0.0"
+flake8-fixme = "^1.1.1"
+flake8-isort = "^4.1.1"
+flake8-variables-names = "^0.0.4"
+isort = "^5.10.1"
+pre-commit = "^2.17.0"
+mypy = "^0.931"
+types-setuptools = "^57.4.8"
+types-toml = "^0.10.3"
+boto3-stubs = "1.21.4"
+
+[tool.isort]
+profile = "black"
+line_length = 120
+src_paths = ["runtime", "infrastructure", "tests"]
+
+[tool.black]
+line-length = 120
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+# addopts = "--cov=limits --cov-report html --cov-report xml"
+testpaths = [
+    "tests/unit",
+]
+
+[tool.coverage.run]
+source = ["limits"]
+omit = ["tests/*", "infrastructure/*"]
+
+[tool.coverage.html]
+directory = "test_report"
