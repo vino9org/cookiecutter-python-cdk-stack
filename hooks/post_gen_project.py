@@ -8,8 +8,8 @@ REMOVE_PATHS = [
 'runtime',
 'tests/unit/runtime/test_handler.py',
 'tests/unit/runtime',
-'tests/unit/events/event_api_1.json',
-'tests/unit/events',
+'tests/unit/runtime/events/event_api_1.json',
+'tests/unit/runtime/events',
 {%- endif %}
 ]
 
