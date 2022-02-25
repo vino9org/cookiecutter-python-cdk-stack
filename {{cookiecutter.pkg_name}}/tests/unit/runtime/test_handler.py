@@ -3,11 +3,16 @@ import os.path
 
 import app
 
-events_path = os.path.abspath(os.path.dirname(__file__) + "/../events")
+
+def event_from_file(file_name):
+    path = os.path.abspath(os.path.dirname(__file__))
+    in_f = open(f"{path}/{file_name}", "r")
+    payload = json.load(in_f)
+    in_f.close()
+    return payload
 
 
 def test_handler_for_apigateway(lambda_context):
-    with open(f"{events_path}/event_api_1.json", "r") as f:
-        event = json.load(f)
-        ret = app.lambda_handler(event, lambda_context)
-        assert ret["statusCode"] == 200
+    event = event_from_file("events/event_api_1.json")
+    ret = app.lambda_handler(event, lambda_context)
+    assert ret["statusCode"] == 200
