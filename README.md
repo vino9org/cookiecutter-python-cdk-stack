@@ -9,3 +9,6 @@ To use:
 cookiecutter gh:sloppycoder/cookiecutter-python-cdk-stack
 
 ```
+
+### TODO:
+1. test github pipeline
