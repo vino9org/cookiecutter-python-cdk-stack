@@ -4,7 +4,7 @@ from aws_cdk import Stack
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_logs as logs
-{% if cookiecutter.use_pytest == 'y' -%}
+{% if cookiecutter.use_lambda == 'y' -%}
 from aws_solutions_constructs.aws_apigateway_lambda import ApiGatewayToLambda
 {%- endif %}
 from constructs import Construct
@@ -15,12 +15,12 @@ class {{ cookiecutter.stack_name }}(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
     def build(self):
-{% if cookiecutter.use_pytest == 'y' -%}
+        {% if cookiecutter.use_lambda == 'y' -%}
         self.lamdba_with_restapi()
-{%- endif %}
+        {%- endif %}
         return self
 
-{% if cookiecutter.use_pytest == 'y' -%}
+    {% if cookiecutter.use_lambda == 'y' -%}
     def lamdba_with_restapi(self) -> ApiGatewayToLambda:
         src_dir = abspath(dirname(abspath(__file__)) + "/../runtime")
         return ApiGatewayToLambda(
@@ -50,4 +50,4 @@ class {{ cookiecutter.stack_name }}(Stack):
                 retention=logs.RetentionDays.ONE_WEEK,
             ),
         )
-{%- endif %}
+    {%- endif %}

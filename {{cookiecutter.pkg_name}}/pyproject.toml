@@ -16,7 +16,7 @@ constructs = "10.*"
 pytest = "^6.2.5"
 pytest-mock = "^3.5.1"
 pytest-cov = "^3.0.0"
-{% if cookiecutter.use_pytest == 'y' -%}
+{% if cookiecutter.use_lambda == 'y' -%}
 "aws-solutions-constructs.aws-apigateway-lambda" = "^2.3.0"
 {%- endif %}
 

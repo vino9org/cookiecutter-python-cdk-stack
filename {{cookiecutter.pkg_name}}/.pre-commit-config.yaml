@@ -1,0 +1,31 @@
+exclude: "^$|deploy|scripts|tmp"
+fail_fast: false
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.4.0
+      hooks:
+          - id: check-merge-conflict
+          - id: end-of-file-fixer
+          - id: check-toml
+
+    - repo: local
+      hooks:
+          - id: black
+            name: formatting::black
+            entry: black .
+            language: system
+            types: [python]
+          - id: isort
+            name: formatting::isort
+            entry: isort
+            language: system
+            types: [python]
+
+    - repo: local
+      hooks:
+          - id: flake8
+            name: linting::flake8
+            entry: flake8
+            language: system
+            types: [python]
+
