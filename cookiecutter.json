@@ -6,6 +6,6 @@
   "version": "0.1.0",
   "use_lambda": ["n", "y"],
   "_copy_without_render": [
-    ".github/workflows/pipeline.yaml"
+    ".github/workflows/pipeline.yaml.pre"
 ]
 }

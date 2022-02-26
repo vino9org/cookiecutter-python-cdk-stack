@@ -32,7 +32,7 @@ jobs:
           fi
 
           echo STACK_NAME="$STACK_NAME"
-          echo '::set-output name=stack-name::stack-'${STACK_NAME:0:20}
+          echo '::set-output name=stack-name::DUMMYSTACKNAME-'${STACK_NAME:0:20}
         env:
           FEATURE_BRANCH_REF: ${{ github.event.ref }}
 
