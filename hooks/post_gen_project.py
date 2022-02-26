@@ -1,26 +1,28 @@
+import json
 import os
 import shlex
+import shutil
 import subprocess
 
-# remove direcotires and files when lambda is not used
-REMOVE_PATHS = [
-    {% if cookiecutter.use_lambda != 'y' -%}
-    "runtime/app.py",
-    "runtime",
-    "tests/unit/runtime/test_handler.py",
-    "tests/unit/runtime/events/event_api_1.json",
-    "tests/unit/runtime/events",
-    "tests/unit/runtime",
-    {%- endif %}
-]
+context = json.loads(
+    """
+{{ cookiecutter | jsonify }}
+"""
+)
 
-for path in REMOVE_PATHS:
-    path = path.strip()
-    if path and os.path.exists(path):
-        if os.path.isdir(path):
-            os.rmdir(path)
-        else:
-            os.unlink(path)
+is_lambda_used = context["use_lambda"] == "y"
+
+if not is_lambda_used:
+    shutil.rmtree("runtime")
+    shutil.rmtree("tests/unit/runtime")
+
+# .env file will be used by VS Code with the setting provided in the project
+# setting PYTHONPATH will let VS Code load modules from the right path
+with open(".env", "w") as env_f:
+    env_f.write("PYTHONPATH=infrastructure")
+    if is_lambda_used:
+        env_f.write(":runtime")
+    env_f.write("\n")
 
 # fix the stack name in pipeline. it is in Jinja2 format, too much quoting needed
 # to make it a template itself
@@ -28,7 +30,9 @@ for path in REMOVE_PATHS:
 # instead
 with open(".github/workflows/pipeline.yaml", "w") as out_f:
     subprocess.call(
-        shlex.split("sed 's/DUMMYSTACKNAME/{{ cookiecutter.stack_name }}/g' .github/workflows/pipeline.yaml.pre"),
+        shlex.split(
+            "sed 's/DUMMYSTACKNAME/{{ cookiecutter.stack_name }}/g' .github/workflows/pipeline.yaml.pre"
+        ),
         stdout=out_f,
     )
 os.unlink(".github/workflows/pipeline.yaml.pre")
