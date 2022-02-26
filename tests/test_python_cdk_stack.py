@@ -32,7 +32,7 @@ def test_default_project(cookies):
     assert result.exit_code == 0
     assert result.exception is None
 
-    assert result.project_path.name == "my_default_stack"
+    assert result.project_path.name == "my-default-stack"
     assert result.project_path.is_dir()
 
     print(f"test project generated {result.project_path}")
@@ -54,7 +54,7 @@ def test_lambda_project(cookies):
     assert result.exit_code == 0
     assert result.exception is None
 
-    assert result.project_path.name == "my_lambda_stack"
+    assert result.project_path.name == "my-lambda-stack"
     assert result.project_path.is_dir()
 
     print(f"test project generated {result.project_path}")

@@ -1,6 +1,7 @@
 {
   "project_name": "Python Cdk Stack",
-  "pkg_name": "{{ cookiecutter.project_name|lower|replace(' ', '-')|replace('-', '_') }}",
+  "project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}",
+  "pkg_name": "{{ cookiecutter.project_slug|replace('-', '_') }}",
   "stack_name": "{{ cookiecutter.project_name|replace(' ', '') }}",
   "project_short_description": "Infrastructure stack built with AWS CDK for Python",
   "version": "0.1.0",
