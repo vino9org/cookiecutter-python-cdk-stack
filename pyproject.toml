@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "cookiecutter-python-cdk-stack"
+version = "0.1.0"
+description = "Cookiecutter template for AWS infrastructure stack built with AWS CDK for Python"
+authors = ["Li Lin <guru.lin@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "6.2.5"
+pytest-cookies = "^0.6.1"
+# formatting, linting
+black = "^22.1.0"
+flake8 = "^4.0.1"
+flake8-black = "^0.2.3"
+flake8-builtins = "^1.5.3"
+flake8-comprehensions = "^3.7.0"
+flake8-debugger = "^4.0.0"
+flake8-fixme = "^1.1.1"
+flake8-isort = "^4.1.1"
+flake8-variables-names = "^0.0.4"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+line_length = 120
+src_paths = ["hooks","tests"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+    "tests"
+]
+
