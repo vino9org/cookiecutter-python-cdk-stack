@@ -1,6 +1,5 @@
 import aws_cdk as core
 import aws_cdk.assertions as assertions
-
 from {{ cookiecutter.pkg_name }} import {{ cookiecutter.stack_name }}
 
 
