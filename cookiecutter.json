@@ -4,7 +4,7 @@
   "stack_name": "{{ cookiecutter.project_name|replace(' ', '') }}",
   "project_short_description": "Infrastructure stack built with AWS CDK for Python",
   "version": "0.1.0",
-  "use_lambda": ["y", "n"],
+  "use_lambda": ["n", "y"],
   "_copy_without_render": [
     ".github/workflows/pipeline.yaml"
 ]
