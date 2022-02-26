@@ -24,7 +24,7 @@ To use the template, please install cookiecutter on your computer by following [
 ```
 
 # generate the template, enter project name when prompted
-cookiecutter gh:sloppycoder/cookiecutter-python-cdk-stack
+cookiecutter gh:vino9org/cookiecutter-python-cdk-stack
 
 # init venv and install dependencies
 cd <project_path>
