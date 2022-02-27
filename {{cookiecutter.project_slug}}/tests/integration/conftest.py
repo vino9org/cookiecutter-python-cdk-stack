@@ -31,7 +31,7 @@ def stack_outputs_for_key(key: str) -> List[str]:
     # in conftest.py
     @pytest.fixture(scope="session")
     def api_base_url() -> str:
-        return _stack_outputs__for_key("RestApiEndpoint")[0]
+        return stack_outputs_for_key("RestApiEndpoint")[0]
 
     # in tests
     import requests
