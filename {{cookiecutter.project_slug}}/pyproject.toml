@@ -19,6 +19,9 @@ pytest-cov = "^3.0.0"
 {% if cookiecutter.use_lambda == 'y' -%}
 "aws-solutions-constructs.aws-apigateway-lambda" = "^2.3.0"
 {%- endif %}
+# this is used by tests/integration/conftest.py to create IAM auth fixtures
+# if IAM auth is not required, it can be removed
+requests-aws4auth = "^1.1.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -52,13 +55,13 @@ line-length = 120
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-# addopts = "--cov=limits --cov-report html --cov-report xml"
+# addopts = "--cov=runtime --cov-report html --cov-report xml"
 testpaths = [
-    "tests/unit",
+    "tests",
 ]
 
 [tool.coverage.run]
-source = ["limits"]
+source = ["runtime"]
 omit = ["tests/*", "infrastructure/*"]
 
 [tool.coverage.html]

@@ -1,5 +1,6 @@
 import os
 import os.path
+import shlex
 import subprocess
 
 
@@ -19,7 +20,7 @@ def run_pytest_in_generated_project(project_path):
 
     os.chdir(project_path)
     subprocess.call(["poetry", "install"])
-    retcode = subprocess.call(["poetry", "run", "pytest", "-v"])
+    retcode = subprocess.call(shlex.split("poetry run pytest -v tests/unit"))
 
     os.chdir(current_path)
 
