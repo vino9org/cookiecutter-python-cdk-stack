@@ -70,7 +70,7 @@ def iam_auth_for_service(service: str) -> AWS4Auth:
 
     # in conftest.py
     @pytest.fixture(scope="session")
-    def http_api_authj() -> str:
+    def http_api_auth() -> str:
         return iam_auth_for_service("execute-api")
 
     # in tests
