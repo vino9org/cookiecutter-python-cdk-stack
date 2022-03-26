@@ -5,6 +5,7 @@
     "python.linting.enabled": true,
     "python.linting.lintOnSave": true,
     "python.linting.ignorePatterns": [".venv/**/*.py"],
+    "python.linting.mypyEnabled": true,
     "python.testing.pytestEnabled": true,
     "python.envFile": "${workspaceFolder}/.env",
     "[python]": {
