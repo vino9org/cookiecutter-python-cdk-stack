@@ -6,7 +6,7 @@ The [poetry](https://python-poetry.org/) package manager should exist in PATH in
 
 The main dependecnies for the generated project are:
 1. [AWS Cloud Development Kit](https://aws.amazon.com/cdk/) for Python
-2. [AWS Lambda Powertools for Python](https://awslabs.github.io/aws-lambda-powertools-python/latest/)
+2. [AWS Lambda Powertools for Python](https://awslabs.github.io/aws-lambda-powertools-python/latest/) and  [Pydantic](https://pydantic-docs.helpmanual.io/)
 3. pytest
 
 The following linting tools are also required and preconfigured to use with the generated project:
