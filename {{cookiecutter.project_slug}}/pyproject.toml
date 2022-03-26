@@ -10,18 +10,19 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.9"
 boto3 = "1.21.4"
-aws-lambda-powertools = "^1.24.2"
 aws-cdk-lib = "^2.13.0"
 constructs = "10.*"
 pytest = "^6.2.5"
 pytest-mock = "^3.5.1"
 pytest-cov = "^3.0.0"
 {% if cookiecutter.use_lambda == 'y' -%}
+aws-lambda-powertools = "^1.24.2"
 "aws-solutions-constructs.aws-apigateway-lambda" = "^2.3.0"
-{%- endif %}
+pydantic = "^1.9.0"
 # this is used by tests/integration/conftest.py to create IAM auth fixtures
 # if IAM auth is not required, it can be removed
 requests-aws4auth = "^1.1.1"
+{%- endif %}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
