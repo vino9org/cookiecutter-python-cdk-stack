@@ -7,21 +7,30 @@ license = "MIT"
 
 # this section contains all dependencies required to run unit and integration tests
 # not just dependencies requied for lambda runtime
+#
+# notes on versions of some dependencies
+#
+# the python and boto3 versions are deteremined by AWs Lambda runtime 
+# https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
+#
+# version of pydantic is based on what's used by aws-lambda-powertools
+# https://github.com/awslabs/aws-lambda-powertools-python/blob/develop/pyproject.toml
+
 [tool.poetry.dependencies]
 python = "^3.9"
-boto3 = "1.21.4"
-aws-cdk-lib = "^2.13.0"
+boto3 = "1.20.32"
+aws-cdk-lib = "^2.38.1"
 constructs = "10.*"
 pytest = "^6.2.5"
 pytest-mock = "^3.5.1"
 pytest-cov = "^3.0.0"
 {% if cookiecutter.use_lambda == 'y' -%}
-aws-lambda-powertools = "^1.24.2"
-"aws-solutions-constructs.aws-apigateway-lambda" = "^2.3.0"
-pydantic = "^1.9.0"
+aws-lambda-powertools = "^1.28.0"
+"aws-solutions-constructs.aws-apigateway-lambda" = "^2.18.0"
+pydantic = "^1.9.2"
 # this is used by tests/integration/conftest.py to create IAM auth fixtures
 # if IAM auth is not required, it can be removed
-requests-aws4auth = "^1.1.1"
+requests-aws4auth = "^1.1.2"
 {%- endif %}
 
 [build-system]
@@ -30,21 +39,21 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dev-dependencies]
 # formatting, linting
-black = "^22.1.0"
+black = "^22.3.0"
 flake8 = "^4.0.1"
-flake8-black = "^0.2.3"
+flake8-black = "^0.3.3"
 flake8-builtins = "^1.5.3"
-flake8-comprehensions = "^3.7.0"
-flake8-debugger = "^4.0.0"
+flake8-comprehensions = "^3.10.0"
+flake8-debugger = "^4.1.2"
 flake8-fixme = "^1.1.1"
 flake8-isort = "^4.1.1"
-flake8-variables-names = "^0.0.4"
+flake8-variables-names = "^0.0.5"
 isort = "^5.10.1"
-pre-commit = "^2.17.0"
-mypy = "^0.931"
+pre-commit = "^2.19.0"
+mypy = "^0.961"
 types-setuptools = "^57.4.8"
 types-toml = "^0.10.3"
-boto3-stubs = "1.21.4"
+boto3-stubs = "1.20.32"
 
 [tool.isort]
 profile = "black"
