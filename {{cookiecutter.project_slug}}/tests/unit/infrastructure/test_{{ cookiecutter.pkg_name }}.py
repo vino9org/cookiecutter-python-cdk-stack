@@ -11,9 +11,12 @@ from {{ cookiecutter.pkg_name }} import {{ cookiecutter.stack_name }}
 @pytest.fixture(scope="session")
 def stack() -> Template:
     stack_name = os.environ.get("TESTING_STACK_NAME", "{{ cookiecutter.stack_name }}")
+    assert stack_name != ""
+
     app = cdk.App()
     stack = {{ cookiecutter.stack_name }}(app, "{{ cookiecutter.stack_name }}")
     return assertions.Template.from_stack(stack)
+
 
 def test_stack_created(stack):
     assert stack

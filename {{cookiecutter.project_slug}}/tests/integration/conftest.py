@@ -4,9 +4,12 @@ from typing import List
 import boto3
 import pytest
 from botocore.exceptions import ClientError
+{% if cookiecutter.use_lambda == 'y' -%}
 from requests_aws4auth import AWS4Auth
+{%- endif %}
 
 _stack_outputs_: List[str] = {}
+
 
 {% if cookiecutter.use_lambda == 'y' -%}
 @pytest.fixture(scope="session")
@@ -17,8 +20,8 @@ def api_base_url() -> str:
 @pytest.fixture(scope="session")
 def http_api_auth() -> AWS4Auth:
     return iam_auth_for_service("execute-api")
-
 {%- endif %}
+
 
 def stack_outputs_for_key(key: str) -> List[str]:
     """
@@ -61,6 +64,7 @@ def stack_outputs_for_key(key: str) -> List[str]:
     return output_values
 
 
+{% if cookiecutter.use_lambda == 'y' -%}
 def iam_auth_for_service(service: str) -> AWS4Auth:
     """
     create the auth object for signing a HTTP request with AWS IAM v4 signature
@@ -87,3 +91,4 @@ def iam_auth_for_service(service: str) -> AWS4Auth:
         session.region_name,
         service,
     )
+{%- endif %}

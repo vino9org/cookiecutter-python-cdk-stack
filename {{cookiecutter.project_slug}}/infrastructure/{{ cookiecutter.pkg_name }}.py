@@ -1,13 +1,12 @@
 from os.path import abspath, dirname
 
 from aws_cdk import Stack
+{% if cookiecutter.use_lambda == 'y' -%}
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_logs as logs
-
-{% if cookiecutter.use_lambda == 'y' -%}
-from aws_solutions_constructs.aws_apigateway_lambda import ApiGatewayToLambda
 from aws_cdk import aws_sam as sam
+from aws_solutions_constructs.aws_apigateway_lambda import ApiGatewayToLambda
 
 {%- endif %}
 from constructs import Construct
