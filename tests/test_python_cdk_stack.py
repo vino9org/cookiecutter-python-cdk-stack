@@ -2,6 +2,7 @@ import os
 import os.path
 import shlex
 import subprocess
+from asyncio.subprocess import PIPE
 
 
 def assert_pipeline_yaml(project_path):
@@ -12,19 +13,38 @@ def assert_pipeline_yaml(project_path):
     assert not os.path.isfile(f"{project_path}/.github/workflows/pipeline.yaml.pre")
 
 
-def run_pytest_in_generated_project(project_path):
+def run_command(project_path, command):
     if not os.path.isdir(project_path):
         return
 
-    current_path = os.getcwd()
+    try:
+        current_path = os.getcwd()
 
-    os.chdir(project_path)
-    subprocess.call(["poetry", "install"])
-    retcode = subprocess.call(shlex.split("poetry run pytest -v tests/unit"))
+        os.chdir(project_path)
+        subprocess.call(["poetry", "install"])
 
-    os.chdir(current_path)
+        # execute the command. if the command fails, print stdout and stderr
+        # for debugging purposes
+        result = subprocess.run(shlex.split(command), capture_output=True)
+        if result.returncode != 0:
+            print(f"error when running '{command}'")
+            print(result.stdout.decode("utf-8"))
 
-    return retcode
+        assert result.returncode == 0
+    finally:
+        os.chdir(current_path)
+
+
+def run_pytest_in_generated_project(project_path):
+    run_command(project_path, "poetry run pytest -v tests/unit")
+
+
+def run_flake8_in_generated_project(project_path):
+    run_command(project_path, "poetry run flake8")
+
+
+def run_mypy_in_generated_project(project_path):
+    run_command(project_path, "poetry run mypy .")
 
 
 def test_default_project(cookies):
@@ -44,7 +64,9 @@ def test_default_project(cookies):
     assert not os.path.exists(f"{result.project_path}/runtime")
     assert not os.path.exists(f"{result.project_path}/tests/runtime")
 
-    assert run_pytest_in_generated_project(result.project_path) == 0
+    run_pytest_in_generated_project(result.project_path)
+    run_flake8_in_generated_project(result.project_path)
+    run_mypy_in_generated_project(result.project_path)
 
 
 def test_lambda_project(cookies):
@@ -67,4 +89,6 @@ def test_lambda_project(cookies):
     assert os.path.isfile(f"{result.project_path}/runtime/app.py")
     assert os.path.isdir(f"{result.project_path}/tests/unit/runtime")
 
-    assert run_pytest_in_generated_project(result.project_path) == 0
+    run_pytest_in_generated_project(result.project_path)
+    run_flake8_in_generated_project(result.project_path)
+    run_mypy_in_generated_project(result.project_path)
