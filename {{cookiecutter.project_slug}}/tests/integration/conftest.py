@@ -2,7 +2,7 @@ import os
 from typing import List
 
 import boto3
-import pytest
+import pytest  # noqa: F401
 from botocore.exceptions import ClientError
 {% if cookiecutter.use_lambda == 'y' -%}
 from requests_aws4auth import AWS4Auth
@@ -20,6 +20,34 @@ def api_base_url() -> str:
 @pytest.fixture(scope="session")
 def http_api_auth() -> AWS4Auth:
     return iam_auth_for_service("execute-api")
+
+
+def iam_auth_for_service(service: str) -> AWS4Auth:
+    """
+    create the auth object for signing a HTTP request with AWS IAM v4 signature
+    can be used create fixture for test cases where IAM authentication is used
+
+    e.g.
+
+    # in conftest.py
+    @pytest.fixture(scope="session")
+    def http_api_auth() -> str:
+        return iam_auth_for_service("execute-api")
+
+    # in tests
+    def test_restapi(api_base_url, http_api_auth):
+        response = requests.get(f"{api_base_url}/ping", auth=http_api_auth)
+        assert response.status_code == 200
+
+    """
+    session = boto3.Session()
+    credentials = session.get_credentials()
+    return AWS4Auth(
+        credentials.access_key,
+        credentials.secret_key,
+        session.region_name,
+        service,
+    )
 {%- endif %}
 
 
@@ -53,7 +81,7 @@ def stack_outputs_for_key(key: str) -> List[str]:
     if not _stack_outputs_:
         try:
             response = client.describe_stacks(StackName=stack_name)
-            _stack_outputs_ = response["Stacks"][0]["Outputs"]
+            _stack_outputs_ = response["Stacks"][0]["Outputs"]  # type: ignore
         except ClientError as e:
             raise Exception(f"Cannot find stack {stack_name} in region {region}") from e
 
@@ -62,33 +90,3 @@ def stack_outputs_for_key(key: str) -> List[str]:
         raise Exception(f"There is no output with key {key} in stack {stack_name} in region {region}")
 
     return output_values
-
-
-{% if cookiecutter.use_lambda == 'y' -%}
-def iam_auth_for_service(service: str) -> AWS4Auth:
-    """
-    create the auth object for signing a HTTP request with AWS IAM v4 signature
-    can be used create fixture for test cases where IAM authentication is used
-
-    e.g.
-
-    # in conftest.py
-    @pytest.fixture(scope="session")
-    def http_api_auth() -> str:
-        return iam_auth_for_service("execute-api")
-
-    # in tests
-    def test_restapi(api_base_url, http_api_auth):
-        response = requests.get(f"{api_base_url}/ping", auth=http_api_auth)
-        assert response.status_code == 200
-
-    """
-    session = boto3.Session()
-    credentials = session.get_credentials()
-    return AWS4Auth(
-        credentials.access_key,
-        credentials.secret_key,
-        session.region_name,
-        service,
-    )
-{%- endif %}

@@ -53,7 +53,7 @@ class {{ cookiecutter.stack_name }}(Stack):
         powertools_app = sam.CfnApplication(
             self,
             f"{POWERTOOLS_BASE_NAME}Application",
-            location={  # type: ignore
+            location={
                 "applicationId": "arn:aws:serverlessrepo:eu-west-1:057560766410:applications/aws-lambda-powertools-python-layer-extras",  # noqa
                 "semanticVersion": version,
             },

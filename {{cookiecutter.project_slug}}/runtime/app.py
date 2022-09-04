@@ -3,11 +3,7 @@ import os
 from typing import Any, Dict, Tuple
 
 from aws_lambda_powertools import Logger, Metrics, Tracer
-from aws_lambda_powertools.event_handler.api_gateway import (
-    ApiGatewayResolver,
-    ProxyEventType,
-    Response,
-)
+from aws_lambda_powertools.event_handler.api_gateway import ApiGatewayResolver, ProxyEventType, Response
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 

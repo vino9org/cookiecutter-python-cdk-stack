@@ -49,15 +49,15 @@ home = os.path.expanduser("~")
 relpath = os.path.relpath(os.getcwd(), home)
 print(
     f"""
-To start working on the project,
+# To start working on the project,
 
-    cd ~/{relpath}
+cd ~/{relpath}
+poetry install
+poetry run precommit install
+poetry shell
 
-    poetry shell
-    poetry install
-    precommit install
 
-Hack away!
+#    Hack away!
 
 """
 )
