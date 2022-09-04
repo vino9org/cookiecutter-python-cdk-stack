@@ -64,8 +64,8 @@ def test_default_project(cookies):
     assert not os.path.exists(f"{result.project_path}/tests/runtime")
 
     run_pytest_in_generated_project(result.project_path)
-    run_flake8_in_generated_project(result.project_path)
-    # run_mypy_in_generated_project(result.project_path)
+    # run_flake8_in_generated_project(result.project_path)
+    run_mypy_in_generated_project(result.project_path)
 
 
 def test_lambda_project(cookies):
@@ -89,5 +89,5 @@ def test_lambda_project(cookies):
     assert os.path.isdir(f"{result.project_path}/tests/unit/runtime")
 
     run_pytest_in_generated_project(result.project_path)
-    run_flake8_in_generated_project(result.project_path)
+    # run_flake8_in_generated_project(result.project_path)
     run_mypy_in_generated_project(result.project_path)
