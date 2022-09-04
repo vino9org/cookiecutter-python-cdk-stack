@@ -53,7 +53,7 @@ print(
 
 cd ~/{relpath}
 poetry install
-poetry run precommit install
+poetry run pre-commit install
 poetry run isort **/*.py
 poetry run black .
 poetry shell
